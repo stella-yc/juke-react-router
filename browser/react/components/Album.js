@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Songs from '../components/Songs';
+import Songs from './Songs';
 
 
 class Album extends Component {

@@ -18,52 +18,40 @@ export default class Artist extends Component {
   }
 
   render() {
-    console.log('props from Artist', this.props);
+    const artist = this.props.artist;
+    const children = this.props.children;
+    const albums = this.props.albums;
+    console.log('props.albums in Artist', this.props.albums);
+
+    const artistSongs = (albums) => {
+      var allSongs = albums.reduce((songs, album, ind) => {
+        return songs.concat(album.songs)
+      }, []);
+      return allSongs;
+    }
+
+    const propsToPassToChildren = {
+      songs: artistSongs(albums),
+      currentSong: this.props.currentSong,
+      isPlaying: this.props.isPlaying,
+      toggleOne: this.props.toggleOne,
+      imageUrl: this.props.album.imageUrl,
+      name: this.props.album.name,
+      albums: this.props.albums
+    }
+
+
+
     return (
-      <div>
-        <h3>{this.props.artist.name}</h3>
-        <h4>ALBUMS</h4>
-
-
-
-
-        <div className="row">
-          {
-            this.props.albums.map(album => (
-              <div className="col-xs-4" key={album.id}>
-                <a onClick={() => this.props.selectAlbum(album.id)} className="thumbnail">
-                  <img src={album.imageUrl} />
-                  <div className="caption">
-                    <h5>
-                      <span>{album.name}</span>
-                    </h5>
-                    <small>{album.songs.length} songs</small>
-                  </div>
-                </a>
-              </div>
-            ))
-          }
-        </div>
-
-        <h4>SONGS</h4>
-        <div className="album">
-          <div>
-            <h3>{this.props.album.name}</h3>
-            <img src={this.props.album.imageUrl} className="img-thumbnail" />
-          </div>
-          <Songs
-            songs={this.props.album.songs}
-            currentSong={this.props.currentSong}
-            isPlaying={this.props.isPlaying}
-            toggleOne={this.props.toggleOne} />
-        </div>
-
-
-
-
-
-      </div>
-    );
+    <div>
+      <h3>{ artist.name }</h3>
+      <ul className="nav nav-tabs">
+        <li><Link to={`/artists/${artist.id}/albums`} activeStyle={{ color: 'pink'}}>ALBUMS</Link></li>
+        <li><Link to={`/artists/${artist.id}/songs`} activeStyle={{ color: 'pink'}}>SONGS</Link></li>
+      </ul>
+      { children && React.cloneElement(children, propsToPassToChildren) }
+    </div>
+    )
   }
 
 }
